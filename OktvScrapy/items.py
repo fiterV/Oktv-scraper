@@ -40,4 +40,5 @@ class OktvscrapyItem(scrapy.Item):
     massEvents = scrapy.Field()
 
     advantages = scrapy.Field()
+    freeDates = scrapy.Field()
 

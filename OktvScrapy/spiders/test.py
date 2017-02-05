@@ -29,16 +29,12 @@ class MySpider(BaseSpider):
         app['price'] = sel.xpath("//span[@class='price_stable']/text()").extract()[0]
         app['address'] = sel.xpath("//h1[@class='h1-apart']/text()").extract()[0]
 
-
-
-        Debug()
-
         marks = sel.xpath("//mark/text()").extract()
-        app['objectType']=marks[0]
+        app['objectType'] = marks[0]
         app['roomType'] = marks[1]
         app['berthCount'] = marks[2]
         app['floor'] = marks[4]
-        app['floorsInTheHouse']=marks[5]
+        app['floorsInTheHouse'] = marks[5]
         app['roomCount'] = marks[6]
         app['kitchen'] = marks[8]
         app['toilet'] = marks[9]
@@ -51,21 +47,34 @@ class MySpider(BaseSpider):
         app['checkDocuments'] = marks[16]
         app['linenChangingEveryNDays'] = marks[17]
         app['cleaningEveryNDays'] = marks[18]
-        app['livingWithOwners']=marks[19]
+        app['livingWithOwners'] = marks[19]
         app['existingIdentificationDocuments'] = marks[20]
         app['peopleUnder21yo'] = marks[21]
         app['withKids'] = marks[22]
         app['withAnimals'] = marks[23]
-        app['smoking']=marks[24]
-        app['massEvents']=marks[25]
+        app['smoking'] = marks[24]
+        app['massEvents'] = marks[25]
 
         advs = sel.xpath("//div[@class='col-xs-12 ydobstva']//p/text()").extract()
-        #Make it a bit prettier
-        app['advantages']=[x.lstrip().rstrip().replace('\t', '')[2:] for x in advs]
+        # Make it a bit prettier
+        app['advantages'] = [x.lstrip().rstrip().replace('\t', '')[2:] for x in advs]
 
-        print(marks)
+        app['freeDates'] = []
+        freeDays = sel.xpath(
+            "//div[contains(@class,'day') and (not(contains(@class, 'bron'))) and (not(contains(@class, 'week'))) and (not(contains(@class, 'today')))]").extract()
+        for day in freeDays:
+            # print(day)
+            date = re.findall(r'data-time-default="(\d{2}.\d{2}.\d{4})"', day)[0]
+            price = re.findall(r'data-price-sum="(\d+)"', day)[0]
+            app['freeDates'].append({
+                'date': date,
+                'price': price + 'UAH'
+            })
+            # print(date, price)
 
-        Debug()
+        if DEBUG:
+            Debug()
+            Debug()
 
         for key in app:
             if type(app[key]) is str:
@@ -83,11 +92,4 @@ class MySpider(BaseSpider):
 
         for link in appartments:
             appLink = urljoin(response.url, link)
-            return scrapy.Request(appLink, callback=self.parseAppartment)
-
-
-
-        # for i in links:
-        #     href = i.extract()
-        #     if 'international' in href:
-        #         yield scrapy.Request(href, callback=self.parse_race)
+            yield scrapy.Request(appLink, callback=self.parseAppartment)
