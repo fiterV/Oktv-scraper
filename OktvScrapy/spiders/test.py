@@ -37,6 +37,31 @@ class MySpider(BaseSpider):
         app['objectType']=marks[0]
         app['roomType'] = marks[1]
         app['berthCount'] = marks[2]
+        app['floor'] = marks[4]
+        app['floorsInTheHouse']=marks[5]
+        app['roomCount'] = marks[6]
+        app['kitchen'] = marks[8]
+        app['toilet'] = marks[9]
+        app['area'] = marks[10]
+        app['repairYear'] = marks[11]
+        app['isItaNewBuildingOrNot'] = marks[12]
+        app['timeForComing'] = marks[13]
+        app['timeForLeaving'] = marks[14]
+        app['keysAreGiven'] = marks[15]
+        app['checkDocuments'] = marks[16]
+        app['linenChangingEveryNDays'] = marks[17]
+        app['cleaningEveryNDays'] = marks[18]
+        app['livingWithOwners']=marks[19]
+        app['existingIdentificationDocuments'] = marks[20]
+        app['peopleUnder21yo'] = marks[21]
+        app['withKids'] = marks[22]
+        app['withAnimals'] = marks[23]
+        app['smoking']=marks[24]
+        app['massEvents']=marks[25]
+
+        advs = sel.xpath("//div[@class='col-xs-12 ydobstva']//p/text()").extract()
+        #Make it a bit prettier
+        app['advantages']=[x.lstrip().rstrip().replace('\t', '')[2:] for x in advs]
 
         print(marks)
 
