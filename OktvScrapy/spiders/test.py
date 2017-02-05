@@ -18,7 +18,7 @@ def Debug():
 class MySpider(BaseSpider):
     name='betty'
     allowed_domains = ['oktv.ua']
-    start_urls = ['http://oktv.ua/kievskaya-oblast/kiev']
+    start_urls = ['http://oktv.ua/search?group_addr=%D0%9A%D0%B8%D0%B5%D0%B2&start=12']
 
     #combination of XPath and Beautiful soup makes life easier
     def parseAppartment(self, response):
@@ -74,8 +74,9 @@ class MySpider(BaseSpider):
             # print(date, price)
 
         if DEBUG:
-            Debug()
-            Debug()
+            #Debug()
+            #Debug()
+            pass
 
         for key in app:
             if type(app[key]) is str:
@@ -94,3 +95,17 @@ class MySpider(BaseSpider):
         for link in appartments:
             appLink = urljoin(response.url, link)
             yield scrapy.Request(appLink, callback=self.parseAppartment)
+
+        pages = sel.xpath("//ul[@class='pagination ok']//a/@href").extract()
+        for page in pages:
+            nextPage = urljoin(response.url, page)
+            if (nextPage>response.url and nextPage.find('start')>0):
+                Debug()
+                print(nextPage)
+                Debug()
+                yield scrapy.Request(nextPage, callback=self.parse)
+                break
+                #Debug()
+                #print('Im going to: {}'.format(nextPage))
+                #Debug()
+                #break
