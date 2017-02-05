@@ -11,6 +11,8 @@ import scrapy
 class OktvscrapyItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    url = scrapy.Field()
+
     price = scrapy.Field()
     address = scrapy.Field()
     objectType = scrapy.Field()
@@ -41,4 +43,5 @@ class OktvscrapyItem(scrapy.Item):
 
     advantages = scrapy.Field()
     freeDates = scrapy.Field()
+
 

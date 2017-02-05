@@ -26,6 +26,7 @@ class MySpider(BaseSpider):
 
         app = OktvscrapyItem()
 
+        app['url']=response.url
         app['price'] = sel.xpath("//span[@class='price_stable']/text()").extract()[0]
         app['address'] = sel.xpath("//h1[@class='h1-apart']/text()").extract()[0]
 
