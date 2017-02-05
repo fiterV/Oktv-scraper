@@ -95,17 +95,14 @@ class MySpider(BaseSpider):
         for link in appartments:
             appLink = urljoin(response.url, link)
             yield scrapy.Request(appLink, callback=self.parseAppartment)
+            break
 
         pages = sel.xpath("//ul[@class='pagination ok']//a/@href").extract()
-        for page in pages:
-            nextPage = urljoin(response.url, page)
-            if (nextPage>response.url and nextPage.find('start')>0):
-                Debug()
-                print(nextPage)
-                Debug()
-                yield scrapy.Request(nextPage, callback=self.parse)
-                break
-                #Debug()
-                #print('Im going to: {}'.format(nextPage))
-                #Debug()
-                #break
+        pages = [urljoin(response.url, x) for x in pages]
+        pos = pages.index(response.url)
+        if pos+1<len(pages):
+            nextPage = pages[pos+1]
+            #Debug()
+            #print(nextPage)
+            #Debug()
+            yield scrapy.Request(nextPage, callback=self.parse)
