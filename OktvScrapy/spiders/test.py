@@ -24,7 +24,6 @@ class MySpider(BaseSpider):
     allowed_domains = ['oktv.ua']
     start_urls = ['http://oktv.ua/search?group_addr=%D0%9A%D0%B8%D0%B5%D0%B2&start=12']
 
-    #combination of XPath and Beautiful soup makes life easier
     def parseAppartment(self, response):
         sel = Selector(response)
 
@@ -50,6 +49,7 @@ class MySpider(BaseSpider):
         app['timeForLeaving'] = marks[14]
         app['keysAreGiven'] = marks[15]
         app['checkDocuments'] = marks[16]
+        # Some of appartments have these qualities , others don't
         # app['linenChangingEveryNDays'] = marks[17]
         # app['cleaningEveryNDays'] = marks[18]
         # app['livingWithOwners'] = marks[19]
@@ -61,26 +61,23 @@ class MySpider(BaseSpider):
         # app['massEvents'] = marks[25]
 
         advs = sel.xpath("//div[@class='col-xs-12 ydobstva']//p/text()").extract()
-        # Make it a bit prettier
+        # Make it look a bit prettier
         app['advantages'] = [x.lstrip().rstrip().replace('\t', '')[2:] for x in advs]
 
         app['freeDates'] = []
-        freeDays = sel.xpath(
-            "//div[contains(@class,'day') and (not(contains(@class, 'bron'))) and (not(contains(@class, 'week'))) and (not(contains(@class, 'today')))]").extract()
+        freeDays = sel.xpath("//div[contains(@class,'day') and (not(contains(@class, 'bron'))) and (not(contains(@class, 'week'))) and (not(contains(@class, 'today')))]").extract()
         for day in freeDays:
-            # print(day)
             date = re.findall(r'data-time-default="(\d{2}.\d{2}.\d{4})"', day)[0]
             price = re.findall(r'data-price-sum="(\d+)"', day)[0]
             app['freeDates'].append({
                 'date': date,
                 'price': price + 'UAH'
             })
-            # print(date, price)
-
         if DEBUG:
-            #Debug()
-            #Debug()
-            pass
+            Debug()
+            #Suspicious code goes here
+
+            Debug()
 
         for key in app:
             if type(app[key]) is str:
@@ -104,7 +101,4 @@ class MySpider(BaseSpider):
         pos = pages.index(response.url)
         if pos+1<len(pages):
             nextPage = pages[pos+1]
-            #Debug()
-            #print(nextPage)
-            #Debug()
-            yield scrapy.Request(nextPage, callback=self.parse)
+            yield scrapy.Request(nextPage)
