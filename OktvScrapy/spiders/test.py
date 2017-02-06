@@ -20,7 +20,7 @@ def writeHTMLToLogFile(sel):
         print(sel.xpath('//html').extract(), file=f)
 
 class MySpider(BaseSpider):
-    name='betty'
+    name='oktv'
     allowed_domains = ['oktv.ua']
     start_urls = ['http://oktv.ua/search?group_addr=%D0%9A%D0%B8%D0%B5%D0%B2&start=12']
 
