@@ -44,5 +44,3 @@ class OktvscrapyItem(scrapy.Item):
 
     advantages = scrapy.Field()
     freeDates = scrapy.Field()
-
-
