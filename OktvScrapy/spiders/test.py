@@ -15,6 +15,10 @@ def Debug():
             '-----------------------------------------------------------------------------------------------> Look over here, boy',
             color='red'))
 
+def writeHTMLToLogFile(sel):
+    with open('log.html', 'w') as f:
+        print(sel.xpath('//html').extract(), file=f)
+
 class MySpider(BaseSpider):
     name='betty'
     allowed_domains = ['oktv.ua']
@@ -46,15 +50,15 @@ class MySpider(BaseSpider):
         app['timeForLeaving'] = marks[14]
         app['keysAreGiven'] = marks[15]
         app['checkDocuments'] = marks[16]
-        app['linenChangingEveryNDays'] = marks[17]
-        app['cleaningEveryNDays'] = marks[18]
-        app['livingWithOwners'] = marks[19]
-        app['existingIdentificationDocuments'] = marks[20]
-        app['peopleUnder21yo'] = marks[21]
-        app['withKids'] = marks[22]
-        app['withAnimals'] = marks[23]
-        app['smoking'] = marks[24]
-        app['massEvents'] = marks[25]
+        # app['linenChangingEveryNDays'] = marks[17]
+        # app['cleaningEveryNDays'] = marks[18]
+        # app['livingWithOwners'] = marks[19]
+        # app['existingIdentificationDocuments'] = marks[20]
+        # app['peopleUnder21yo'] = marks[21]
+        # app['withKids'] = marks[22]
+        # app['withAnimals'] = marks[23]
+        # app['smoking'] = marks[24]
+        # app['massEvents'] = marks[25]
 
         advs = sel.xpath("//div[@class='col-xs-12 ydobstva']//p/text()").extract()
         # Make it a bit prettier
@@ -81,8 +85,6 @@ class MySpider(BaseSpider):
         for key in app:
             if type(app[key]) is str:
                 app[key] = app[key].lstrip().rstrip()
-        # with open('log.html', 'w') as f:
-        #     print(sel.xpath('//html').extract(), file=f)
         return app
 
     def parse(self, response):
